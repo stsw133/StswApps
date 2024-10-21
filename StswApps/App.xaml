@@ -1,0 +1,31 @@
+﻿<se:StswApp x:Class="StswApps.App"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:local="clr-namespace:StswApps"
+            xmlns:se="clr-namespace:StswExpress;assembly=StswExpress"
+            AllowMultipleInstances="False" StartupUri="Modules/MainWindow.xaml">
+    <se:StswApp.Resources>
+        <ResourceDictionary>
+            <!-- AddCustomApp -->
+            <DataTemplate DataType="{x:Type local:AddCustomAppContext}">
+                <local:AddCustomAppView/>
+            </DataTemplate>
+            <!-- Admin -->
+            <DataTemplate DataType="{x:Type local:AdminContext}">
+                <local:AdminView/>
+            </DataTemplate>
+            <!-- Config -->
+            <DataTemplate DataType="{x:Type local:ConfigContext}">
+                <local:ConfigView/>
+            </DataTemplate>
+            <!-- History -->
+            <DataTemplate DataType="{x:Type local:HistoryContext}">
+                <local:HistoryView/>
+            </DataTemplate>
+            <!-- Main -->
+            <DataTemplate DataType="{x:Type local:MainContext}">
+                <local:MainView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </se:StswApp.Resources>
+</se:StswApp>

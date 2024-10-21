@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[AppFiles]
+(
+	[ID] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[FileName] VARCHAR(100) NOT NULL,
+	[FileVersion] VARCHAR(100) NULL,
+	[RelativePath] VARCHAR(100) NULL
+)

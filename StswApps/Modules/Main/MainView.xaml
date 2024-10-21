@@ -1,0 +1,214 @@
+﻿<UserControl x:Class="StswApps.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:StswApps"
+             xmlns:se="clr-namespace:StswExpress;assembly=StswExpress"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type={x:Type local:MainContext}}">
+
+    <DockPanel Margin="5">
+        <!-- notify icon -->
+        <se:StswNotifyIcon ContextControl="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                           IconPath="/Resources/icon.ico"
+                           IsAlwaysVisible="True"
+                           Text="{x:Static se:StswFn.AppNameAndVersion}">
+            <se:StswNotifyIcon.ContextMenu>
+                <ContextMenu Style="{DynamicResource StswContextMenuStyle}">
+                    <se:StswMenuItem/>
+                </ContextMenu>
+            </se:StswNotifyIcon.ContextMenu>
+        </se:StswNotifyIcon>
+        <!-- info & buttons -->
+        <DockPanel DockPanel.Dock="Bottom" Margin="5">
+            <UniformGrid DockPanel.Dock="Right" Rows="1">
+                <se:StswSubButton IconData="{x:Static se:StswIcons.ShieldCrownOutline}" IconFill="{DynamicResource StswColor.Modify}" Margin="3 0 0 0" ToolTipService.InitialShowDelay="100">
+                    <se:StswSubButton.ToolTip>
+                        <se:StswToolTip Content="Administration" Padding="5"/>
+                    </se:StswSubButton.ToolTip>
+                </se:StswSubButton>
+                <se:StswSubDrop AutoClose="True" IconData="{x:Static se:StswIcons.Cog}" IconFill="{DynamicResource StswColor.Neutral}" Margin="3 0 0 0" ToolTipService.InitialShowDelay="100">
+                    <se:StswSubDrop.ToolTip>
+                        <se:StswToolTip Content="Options" Padding="5"/>
+                    </se:StswSubDrop.ToolTip>
+
+                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding RefreshCommand}" HorizontalContentAlignment="Left">
+                        <se:StswLabel Content="Refresh" IconData="{x:Static se:StswIcons.Refresh}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                    </se:StswButton>
+                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding AddCustomAppCommand}" HorizontalContentAlignment="Left">
+                        <se:StswLabel Content="Add custom app" IconData="{x:Static se:StswIcons.Plus}" IconFill="{DynamicResource StswColor.Positive}"/>
+                    </se:StswButton>
+                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding HistoryCommand}" HorizontalContentAlignment="Left">
+                        <se:StswLabel Content="History" IconData="{x:Static se:StswIcons.History}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                    </se:StswButton>
+                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding ConfigCommand}" HorizontalContentAlignment="Left">
+                        <se:StswLabel Content="Config" IconData="{x:Static se:StswIcons.Cog}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                    </se:StswButton>
+                </se:StswSubDrop>
+            </UniformGrid>
+            <se:StswText>
+                <Run Text="Logged as:"/>
+                <Run Text="{Binding User.Name, Mode=OneWay}" FontWeight="Bold"/>
+            </se:StswText>
+        </DockPanel>
+        <!-- list -->
+        <se:StswTabControl Margin="5" Padding="0" NewItemButtonVisibility="Collapsed" SelectedIndex="{Binding SelectedTab}">
+            <!-- apps -->
+            <se:StswTabItem>
+                <se:StswTabItem.Header>
+                    <se:StswLabel Content="Apps" IconData="{x:Static se:StswIcons.Apps}"/>
+                </se:StswTabItem.Header>
+                <se:StswListBox se:StswControl.IsBorderless="True" ItemsSource="{Binding AppsCollectionView}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding OpenAppCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <se:StswListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <se:StswSubDrop DockPanel.Dock="Right" IconData="{x:Static se:StswIcons.DotsVertical}">
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Run" IconData="{x:Static se:StswIcons.Launch}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Changelog" IconData="{x:Static se:StswIcons.Post}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.RemoveAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left" Visibility="{Binding IsCustom, Converter={x:Static se:StswBoolConverter.Instance}}">
+                                        <se:StswLabel Content="Remove" IconData="{x:Static se:StswIcons.TrashCan}" IconFill="{DynamicResource StswColor.Negative}"/>
+                                    </se:StswButton>
+                                </se:StswSubDrop>
+                                <se:StswLabel Content="{Binding Name}" IconSource="{Binding IconSource}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </se:StswListBox.ItemTemplate>
+                </se:StswListBox>
+            </se:StswTabItem>
+            <!-- excels -->
+            <se:StswTabItem>
+                <se:StswTabItem.Header>
+                    <se:StswLabel Content="Excels" IconData="{x:Static se:StswIcons.MicrosoftExcel}"/>
+                </se:StswTabItem.Header>
+                <se:StswListBox se:StswControl.IsBorderless="True" ItemsSource="{Binding AppsCollectionView}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding OpenAppCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <se:StswListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <se:StswSubDrop DockPanel.Dock="Right" IconData="{x:Static se:StswIcons.DotsVertical}">
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Run" IconData="{x:Static se:StswIcons.Launch}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Changelog" IconData="{x:Static se:StswIcons.Post}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.RemoveAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left" Visibility="{Binding IsCustom, Converter={x:Static se:StswBoolConverter.Instance}}">
+                                        <se:StswLabel Content="Remove" IconData="{x:Static se:StswIcons.TrashCan}" IconFill="{DynamicResource StswColor.Negative}"/>
+                                    </se:StswButton>
+                                </se:StswSubDrop>
+                                <se:StswLabel Content="{Binding Name}" IconSource="{Binding IconSource}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </se:StswListBox.ItemTemplate>
+                </se:StswListBox>
+            </se:StswTabItem>
+            <!-- tools -->
+            <se:StswTabItem>
+                <se:StswTabItem.Header>
+                    <se:StswLabel Content="Tools" IconData="{x:Static se:StswIcons.Tools}"/>
+                </se:StswTabItem.Header>
+                <se:StswListBox se:StswControl.IsBorderless="True" ItemsSource="{Binding AppsCollectionView}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding OpenAppCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <se:StswListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <se:StswSubDrop DockPanel.Dock="Right" IconData="{x:Static se:StswIcons.DotsVertical}">
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Run" IconData="{x:Static se:StswIcons.Launch}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Changelog" IconData="{x:Static se:StswIcons.Post}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.RemoveAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left" Visibility="{Binding IsCustom, Converter={x:Static se:StswBoolConverter.Instance}}">
+                                        <se:StswLabel Content="Remove" IconData="{x:Static se:StswIcons.TrashCan}" IconFill="{DynamicResource StswColor.Negative}"/>
+                                    </se:StswButton>
+                                </se:StswSubDrop>
+                                <se:StswLabel Content="{Binding Name}" IconSource="{Binding IconSource}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </se:StswListBox.ItemTemplate>
+                </se:StswListBox>
+            </se:StswTabItem>
+            <!-- docs -->
+            <se:StswTabItem>
+                <se:StswTabItem.Header>
+                    <se:StswLabel Content="Docs" IconData="{x:Static se:StswIcons.FileDocument}"/>
+                </se:StswTabItem.Header>
+                <se:StswListBox se:StswControl.IsBorderless="True" ItemsSource="{Binding AppsCollectionView}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding OpenAppCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <se:StswListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <se:StswSubDrop DockPanel.Dock="Right" IconData="{x:Static se:StswIcons.DotsVertical}">
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Run" IconData="{x:Static se:StswIcons.Launch}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Changelog" IconData="{x:Static se:StswIcons.Post}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.RemoveAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left" Visibility="{Binding IsCustom, Converter={x:Static se:StswBoolConverter.Instance}}">
+                                        <se:StswLabel Content="Remove" IconData="{x:Static se:StswIcons.TrashCan}" IconFill="{DynamicResource StswColor.Negative}"/>
+                                    </se:StswButton>
+                                </se:StswSubDrop>
+                                <se:StswLabel Content="{Binding Name}" IconSource="{Binding IconSource}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </se:StswListBox.ItemTemplate>
+                </se:StswListBox>
+            </se:StswTabItem>
+            <!-- tests -->
+            <se:StswTabItem>
+                <se:StswTabItem.Header>
+                    <se:StswLabel Content="Tests" IconData="{x:Static se:StswIcons.TestTube}"/>
+                </se:StswTabItem.Header>
+                <se:StswListBox se:StswControl.IsBorderless="True" ItemsSource="{Binding AppsCollectionView}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding OpenAppCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <se:StswListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <se:StswSubDrop DockPanel.Dock="Right" IconData="{x:Static se:StswIcons.DotsVertical}">
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.OpenAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Run" IconData="{x:Static se:StswIcons.Launch}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" HorizontalContentAlignment="Left">
+                                        <se:StswLabel Content="Changelog" IconData="{x:Static se:StswIcons.Post}" IconFill="{DynamicResource StswColor.Neutral}"/>
+                                    </se:StswButton>
+                                    <se:StswButton se:StswControl.IsBorderless="True" Command="{Binding DataContext.RemoveAppCommand, RelativeSource={RelativeSource AncestorType={x:Type se:StswListBox}}}" CommandParameter="{Binding}" HorizontalContentAlignment="Left" Visibility="{Binding IsCustom, Converter={x:Static se:StswBoolConverter.Instance}}">
+                                        <se:StswLabel Content="Remove" IconData="{x:Static se:StswIcons.TrashCan}" IconFill="{DynamicResource StswColor.Negative}"/>
+                                    </se:StswButton>
+                                </se:StswSubDrop>
+                                <se:StswLabel Content="{Binding Name}" IconSource="{Binding IconSource}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </se:StswListBox.ItemTemplate>
+                </se:StswListBox>
+            </se:StswTabItem>
+        </se:StswTabControl>
+    </DockPanel>
+</UserControl>

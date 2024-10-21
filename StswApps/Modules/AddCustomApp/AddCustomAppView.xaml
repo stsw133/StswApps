@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="StswApps.AddCustomAppView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StswApps"
+             xmlns:se="clr-namespace:StswExpress;assembly=StswExpress"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type={x:Type local:AddCustomAppContext}}">
+
+    <se:StswGroupBox>
+        <se:StswGroupBox.Header>
+            <se:StswLabel Content="Add custom app" IconData="{x:Static se:StswIcons.Plus}"/>
+        </se:StswGroupBox.Header>
+
+        <DockPanel>
+            <UniformGrid DockPanel.Dock="Bottom" Margin="3" Rows="1">
+                <se:StswButton Command="{Binding AcceptCommand}" Margin="3">
+                    <se:StswLabel Content="Accept" IconData="{x:Static se:StswIcons.Check}" IconFill="{DynamicResource StswColor.Positive}"/>
+                </se:StswButton>
+                <se:StswButton Command="{Binding CancelCommand}" Margin="3">
+                    <se:StswLabel Content="Cancel" IconData="{x:Static se:StswIcons.Cancel}" IconFill="{DynamicResource StswColor.Negative}"/>
+                </se:StswButton>
+            </UniformGrid>
+
+            <se:StswLabelPanel LabelFontWeight="Medium" Margin="3" Orientation="Vertical" Width="300">
+                <se:StswLabel Content="Executable path:"/>
+                <se:StswFilePicker PathType="File" Placeholder="Select an executable path..." SelectedPath="{Binding SelectedPath}"/>
+                <se:StswLabel Content="Displayed name:"/>
+                <se:StswTextBox Text="{Binding NewApp.Name}"/>
+                <se:StswLabel Content="Description:"/>
+                <se:StswTextBox MinHeight="100" Text="{Binding NewApp.Description}"/>
+            </se:StswLabelPanel>
+        </DockPanel>
+    </se:StswGroupBox>
+</UserControl>

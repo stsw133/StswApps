@@ -5,7 +5,7 @@
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:local="clr-namespace:StswApps"
                xmlns:se="clr-namespace:StswExpress;assembly=StswExpress"
-               mc:Ignorable="d" Height="600" Width="600" WindowStartupLocation="CenterScreen"
+               mc:Ignorable="d" Height="500" Width="750" WindowStartupLocation="CenterScreen"
                Title="{x:Static se:StswFn.AppNameAndVersion}" Icon="/Resources/icon.ico">
     <se:StswContentDialog Identifier="MainDialog">
         <local:MainContext/>

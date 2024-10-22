@@ -8,6 +8,7 @@ public class MainContext : StswObservableObject
 {
     public StswAsyncCommand<AppModel?> OpenAppCommand { get; }
     public StswAsyncCommand<AppModel?> RemoveAppCommand { get; }
+    public StswAsyncCommand AdminCommand { get; }
     public StswAsyncCommand RefreshCommand { get; }
     public StswAsyncCommand AddCustomAppCommand { get; }
     public StswAsyncCommand HistoryCommand { get; }
@@ -17,6 +18,7 @@ public class MainContext : StswObservableObject
     {
         OpenAppCommand = new(OpenApp);
         RemoveAppCommand = new(RemoveApp);
+        AdminCommand = new(Admin);
         RefreshCommand = new(Refresh);
         AddCustomAppCommand = new(AddCustomApp);
         HistoryCommand = new(History, () => false);
@@ -47,6 +49,12 @@ public class MainContext : StswObservableObject
                 File.WriteAllText(CustomAppsPath, JsonSerializer.Serialize(Apps.Where(x => x.IsCustom)));
             });
         }
+    }
+
+    /// Command: Admin
+    private async Task Admin()
+    {
+        await StswContentDialog.Show(new AdminContext(), "MainDialog");
     }
 
     /// Command: Refresh

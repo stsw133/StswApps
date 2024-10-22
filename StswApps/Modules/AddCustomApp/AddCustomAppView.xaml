@@ -28,7 +28,7 @@
                 <se:StswLabel Content="Displayed name:"/>
                 <se:StswTextBox Text="{Binding NewApp.Name}"/>
                 <se:StswLabel Content="Description:"/>
-                <se:StswTextBox MinHeight="100" Text="{Binding NewApp.Description}"/>
+                <se:StswTextBox AcceptsReturn="True" MinHeight="100" Text="{Binding NewApp.Description}" VerticalContentAlignment="Top"/>
             </se:StswLabelPanel>
         </DockPanel>
     </se:StswGroupBox>
